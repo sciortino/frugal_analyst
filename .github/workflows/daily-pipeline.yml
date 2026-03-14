@@ -62,6 +62,7 @@ jobs:
             - [ ] Prose reads well
             - [ ] No sensitive data exposed
           branch: post/$(date +%Y-%m-%d)
+          reviewers: sciortino
           delete-branch: true
           add-paths: |
             site/src/content/blog/
