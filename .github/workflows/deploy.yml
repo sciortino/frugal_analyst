@@ -31,6 +31,8 @@ jobs:
 
       - name: Build Astro site
         working-directory: site
+        env:
+          PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.PUBLIC_GA_MEASUREMENT_ID }}
         run: npm run build
 
       - name: Upload artifact

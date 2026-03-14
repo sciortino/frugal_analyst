@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { title = 'The Frugal Analyst' } = Astro.props;
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
 <!doctype html>
 <html lang="en">
@@ -17,6 +18,15 @@ const { title = 'The Frugal Analyst' } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <slot name="head" />
+    {gaId && (
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+      <Fragment set:html={`<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${gaId}');
+      </script>`} />
+    )}
   </head>
   <body>
     <Header />
