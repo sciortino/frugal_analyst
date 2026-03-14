@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEO from '../../components/SEO.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog');
+  const allTags = new Set<string>();
+  allPosts.forEach((post) => post.data.tags.forEach((tag) => allTags.add(tag)));
+
+  return [...allTags].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: allPosts
+        .filter((post) => post.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+<BaseLayout title={`Posts tagged "${tag}" | The Frugal Analyst`}>
+  <SEO
+    slot="head"
+    title={`Posts tagged "${tag}" | The Frugal Analyst`}
+    description={`All financial analysis posts tagged with "${tag}" on The Frugal Analyst.`}
+  />
+
+  <h1>Tagged: {tag}</h1>
+  <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
+    {posts.length} post{posts.length !== 1 ? 's' : ''} tagged with "{tag}"
+  </p>
+
+  {posts.map((post) => (
+    <PostCard
+      id={post.id}
+      title={post.data.title}
+      date={post.data.date}
+      ticker={post.data.ticker}
+      company={post.data.company}
+      description={post.data.description}
+      tags={post.data.tags}
+    />
+  ))}
+
+  <p style="margin-top: 2rem;">
+    <a href="/blog/">&larr; Back to archive</a>
+  </p>
+</BaseLayout>

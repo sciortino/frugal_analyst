@@ -1,0 +1,28 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'The Frugal Analyst' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <Header />
+    <main class="site-wrapper">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

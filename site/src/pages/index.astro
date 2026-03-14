@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const latestPosts = sortedPosts.slice(0, 10);
+---
+<BaseLayout title="The Frugal Analyst - Corporate Finance & Labor Economics">
+  <SEO
+    slot="head"
+    title="The Frugal Analyst"
+    description="Data-driven analysis of corporate finance and labor economics. Daily automated analysis of SEC filings, workforce metrics, and financial performance."
+  />
+
+  <h1>Latest Analysis</h1>
+
+  {latestPosts.map((post) => (
+    <PostCard
+      id={post.id}
+      title={post.data.title}
+      date={post.data.date}
+      ticker={post.data.ticker}
+      company={post.data.company}
+      description={post.data.description}
+      tags={post.data.tags}
+    />
+  ))}
+
+  {sortedPosts.length > 10 && (
+    <p style="margin-top: 2rem;">
+      <a href="/blog/">View all posts in the archive &rarr;</a>
+    </p>
+  )}
+</BaseLayout>

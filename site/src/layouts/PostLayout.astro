@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+import Disclaimer from '../components/Disclaimer.astro';
+
+interface Props {
+  title: string;
+  date: Date;
+  ticker: string;
+  company: string;
+  sector: string;
+  tags: string[];
+  description: string;
+  keyMetrics: { label: string; value: string }[];
+}
+
+const { title, date, ticker, company, sector, tags, description, keyMetrics } = Astro.props;
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout title={`${title} | The Frugal Analyst`}>
+  <SEO
+    slot="head"
+    title={title}
+    description={description}
+    article={true}
+    publishDate={date}
+  />
+
+  <article>
+    <header class="post-header">
+      <h1 class="post-title">{title}</h1>
+      <div class="post-meta">
+        <time datetime={date.toISOString()}>{formattedDate}</time>
+        <span><span class="ticker-badge">{ticker}</span> {company}</span>
+        <span>{sector}</span>
+      </div>
+    </header>
+
+    {keyMetrics.length > 0 && (
+      <div class="key-metrics">
+        <h3>Key Metrics</h3>
+        <div class="metrics-grid">
+          {keyMetrics.map((metric) => (
+            <div class="metric-item">
+              <span class="metric-label">{metric.label}</span>
+              <span class="metric-value">{metric.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="post-content">
+      <slot />
+    </div>
+
+    <div class="tags" style="margin-top: 2rem;">
+      {tags.map((tag) => (
+        <a href={`/tags/${tag}/`} class="tag">{tag}</a>
+      ))}
+    </div>
+
+    <Disclaimer />
+  </article>
+</BaseLayout>

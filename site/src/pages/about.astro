@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+---
+<BaseLayout title="About | The Frugal Analyst">
+  <SEO
+    slot="head"
+    title="About | The Frugal Analyst"
+    description="Learn about The Frugal Analyst's methodology, data sources, and mission to bring transparent financial analysis through a labor economics lens."
+  />
+
+  <div class="about-content">
+    <section>
+      <h1>What is The Frugal Analyst?</h1>
+      <p>
+        The Frugal Analyst is an automated daily financial analysis blog that examines
+        public companies through the lens of labor economics. Each day, we analyze corporate
+        financials to uncover how companies generate value relative to their workforce, how
+        headcount changes correlate with financial performance, and what workforce metrics
+        reveal about a company's operational efficiency.
+      </p>
+      <p>
+        Our analysis goes beyond traditional financial metrics to explore questions like:
+        How much revenue does each employee generate? Is the company becoming more or less
+        efficient as it grows? What do hiring and layoff patterns tell us about a company's
+        strategic direction?
+      </p>
+    </section>
+
+    <section>
+      <h2>Methodology</h2>
+      <p>
+        Each analysis begins with the latest available financial data from SEC filings,
+        combined with macroeconomic indicators from government sources. We calculate
+        labor-adjusted financial metrics including revenue per employee, profit per employee,
+        compensation ratios, and workforce productivity trends.
+      </p>
+      <p>
+        Our models compare these metrics against sector benchmarks and historical performance
+        to identify notable trends, outliers, and inflection points. All analyses are
+        generated programmatically and reviewed for accuracy before publication.
+      </p>
+    </section>
+
+    <section>
+      <h2>Data Sources</h2>
+      <p>We draw from a range of public, authoritative data sources:</p>
+      <ul>
+        <li><strong>SEC EDGAR</strong> -- 10-K and 10-Q filings for corporate financial data</li>
+        <li><strong>Financial Modeling Prep API</strong> -- standardized financial statements and ratios</li>
+        <li><strong>Bureau of Labor Statistics (BLS)</strong> -- employment, wages, and labor market data</li>
+        <li><strong>Federal Reserve Economic Data (FRED)</strong> -- macroeconomic indicators and sector benchmarks</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>About</h2>
+      <p>
+        The Frugal Analyst is built on the principle that the most valuable financial
+        insights come from systematic, transparent analysis rather than speculation.
+        By automating the collection and processing of financial data, we can provide
+        consistent, bias-reduced analysis at a pace that manual research cannot match.
+      </p>
+      <p>
+        This project combines financial engineering, data science, and labor economics
+        to offer a unique perspective on corporate performance. All content is generated
+        by AI, reviewed by humans, and published as a free public resource.
+      </p>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,20 @@
+[project]
+name = "frugal-pipeline"
+version = "0.1.0"
+description = "Automated financial analysis pipeline for The Frugal Analyst"
+readme = "README.md"
+authors = [
+    { name = "database-tycoon", email = "stephen@databasetycoon.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.84.0",
+    "httpx>=0.28.1",
+    "matplotlib>=3.10.8",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.10.4,<0.11.0"]
+build-backend = "uv_build"
