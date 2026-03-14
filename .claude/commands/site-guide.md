@@ -126,6 +126,32 @@ Output goes to `site/dist/`. Zero JavaScript, pure static HTML/CSS.
 
 ---
 
+## Google Analytics
+
+GA4 is integrated via a build-time environment variable. The measurement ID is NOT in the source code.
+
+- **Local dev**: set `PUBLIC_GA_MEASUREMENT_ID` in `site/.env` (gitignored)
+- **Production**: set as a GitHub Actions secret (`PUBLIC_GA_MEASUREMENT_ID`)
+- **Code**: injected in `site/src/layouts/BaseLayout.astro` — only loads if the env var is present
+- **Dashboard**: analytics.google.com
+
+---
+
+## GitHub Secrets Required
+
+Add these in **Settings > Secrets > Actions** on the repo:
+
+| Secret | Purpose |
+|--------|---------|
+| `FMP_API_KEY` | Financial Modeling Prep API |
+| `FRED_API_KEY` | Federal Reserve Economic Data |
+| `BLS_API_KEY` | Bureau of Labor Statistics |
+| `ANTHROPIC_API_KEY` | Claude API for content generation |
+| `SEC_EDGAR_EMAIL` | Email for SEC EDGAR User-Agent header |
+| `PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID |
+
+---
+
 ## Troubleshooting
 
 - **Build fails**: Run `cd site && npm run build` locally to see errors. Usually a frontmatter schema mismatch.
