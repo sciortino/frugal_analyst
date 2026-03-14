@@ -20,6 +20,7 @@
   --color-tag-bg: #e8ecf1;
   --color-tag-text: #2c3e6b;
   --color-metric-bg: #f0f4f8;
+  --color-highlight: #fff8e1;
   --max-width: 720px;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
@@ -39,6 +40,7 @@
     --color-tag-bg: #1e2a40;
     --color-tag-text: #9ab5e4;
     --color-metric-bg: #141428;
+    --color-highlight: #2a2510;
   }
 }
 
@@ -63,7 +65,7 @@ h1, h2, h3, h4 {
 }
 
 h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-h2 { font-size: 1.4rem; margin-top: 2rem; margin-bottom: 0.75rem; }
+h2 { font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 0.75rem; }
 h3 { font-size: 1.15rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
 
 p {
@@ -79,6 +81,11 @@ a:hover {
   text-decoration: underline;
 }
 
+strong {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
 blockquote {
   border-left: 3px solid var(--color-accent);
   padding-left: 1rem;
@@ -89,32 +96,32 @@ blockquote {
 
 hr {
   border: none;
-  border-top: 1px solid var(--color-border-light);
-  margin: 2rem 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
 }
 
 /* === Layout === */
 .site-wrapper {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
 main {
   min-height: 60vh;
-  padding: 2rem 0;
+  padding: 2rem 0 3rem;
 }
 
 /* === Header === */
 .site-header {
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 2px solid var(--color-accent);
   padding: 1.5rem 0 1rem;
 }
 
 .site-header .header-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
 .site-title {
@@ -130,9 +137,9 @@ main {
 }
 
 .site-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--color-text-muted);
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
   letter-spacing: 0.02em;
 }
 
@@ -148,6 +155,7 @@ main {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 600;
+  transition: color 0.15s;
 }
 
 .site-nav a:hover {
@@ -157,7 +165,7 @@ main {
 
 /* === Footer === */
 .site-footer {
-  border-top: 1px solid var(--color-border-light);
+  border-top: 2px solid var(--color-accent);
   padding: 1.5rem 0;
   margin-top: 3rem;
 }
@@ -165,7 +173,7 @@ main {
 .site-footer .footer-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
   font-size: 0.78rem;
   color: var(--color-text-muted);
   line-height: 1.6;
@@ -188,7 +196,8 @@ main {
 .post-card-title {
   font-size: 1.15rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.35;
 }
 
 .post-card-title a {
@@ -203,7 +212,7 @@ main {
 .post-card-meta {
   font-size: 0.8rem;
   color: var(--color-text-muted);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
@@ -213,6 +222,7 @@ main {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   margin-bottom: 0.5rem;
+  line-height: 1.6;
 }
 
 /* === Tags === */
@@ -228,10 +238,11 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   background: var(--color-tag-bg);
   color: var(--color-tag-text);
   border-radius: 3px;
+  transition: background 0.15s, color 0.15s;
 }
 
 a.tag:hover {
@@ -243,11 +254,14 @@ a.tag:hover {
 /* === Post Layout === */
 .post-header {
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .post-title {
   font-size: 1.7rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
 }
 
 .post-meta {
@@ -256,7 +270,7 @@ a.tag:hover {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 0.75rem;
+  align-items: center;
 }
 
 .ticker-badge {
@@ -264,19 +278,21 @@ a.tag:hover {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
-  padding: 0.1rem 0.45rem;
+  padding: 0.15rem 0.5rem;
   background: var(--color-accent);
   color: var(--color-bg);
   border-radius: 3px;
+  letter-spacing: 0.02em;
 }
 
 /* === Key Metrics Box === */
 .key-metrics {
   background: var(--color-metric-bg);
   border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
   border-radius: 4px;
-  padding: 1.25rem;
-  margin-bottom: 2rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .key-metrics h3 {
@@ -291,19 +307,20 @@ a.tag:hover {
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 1rem 2rem;
 }
 
 .metric-item {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
 .metric-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
 .metric-value {
@@ -320,7 +337,7 @@ a.tag:hover {
 
 .post-content h2 {
   border-bottom: 1px solid var(--color-border-light);
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.4rem;
 }
 
 .post-content ul,
@@ -330,15 +347,20 @@ a.tag:hover {
 }
 
 .post-content li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-content strong {
+  color: var(--color-text);
 }
 
 .post-content code {
   font-family: var(--font-mono);
-  font-size: 0.88em;
+  font-size: 0.86em;
   background: var(--color-surface);
-  padding: 0.1em 0.35em;
+  padding: 0.15em 0.4em;
   border-radius: 3px;
+  border: 1px solid var(--color-border-light);
 }
 
 .post-content pre {
@@ -353,32 +375,37 @@ a.tag:hover {
 .post-content pre code {
   background: none;
   padding: 0;
+  border: none;
 }
 
 /* === Tables (Financial Data) === */
 .post-content table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
   font-size: 0.88rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .post-content thead {
+  background: var(--color-surface);
   border-bottom: 2px solid var(--color-border);
 }
 
 .post-content th {
   text-align: left;
   font-weight: 700;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.78rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
 }
 
 .post-content td {
-  padding: 0.45rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   border-bottom: 1px solid var(--color-border-light);
 }
 
@@ -386,36 +413,47 @@ a.tag:hover {
   background: var(--color-surface-alt);
 }
 
-/* Right-align numeric columns (2nd column onward by convention) */
+.post-content tbody tr:hover {
+  background: var(--color-highlight);
+}
+
+/* Right-align numeric columns (2nd column onward) */
 .post-content th:not(:first-child),
 .post-content td:not(:first-child) {
   text-align: right;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
 }
 
-/* === Figures & Images === */
-.post-content figure,
+/* === Images & Chart Figures === */
 .post-content img {
   max-width: 100%;
-  margin: 1.5rem 0;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  border: 1px solid var(--color-border-light);
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
-.post-content figure {
-  text-align: center;
-}
-
-.post-content figcaption {
+/* Image captions: markdown renders *text* after ![img] as <p><em> */
+.post-content img + br + em,
+.post-content p:has(> em:only-child) {
+  display: block;
   font-size: 0.78rem;
   color: var(--color-text-muted);
-  margin-top: 0.35rem;
+  text-align: center;
+  margin-top: -1.25rem;
+  margin-bottom: 2rem;
   font-style: italic;
+  line-height: 1.5;
 }
 
 /* === Disclaimer === */
 .disclaimer {
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);
+  border-left: 4px solid var(--color-text-muted);
   border-radius: 4px;
   padding: 1rem 1.25rem;
   margin-top: 2.5rem;
@@ -441,7 +479,11 @@ a.tag:hover {
 
 /* === About Page === */
 .about-content section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.about-content h2 {
+  margin-top: 2rem;
 }
 
 /* === Responsive === */
@@ -459,7 +501,7 @@ a.tag:hover {
 
   .post-meta {
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.3rem;
   }
 
   .post-content table {
@@ -468,6 +510,10 @@ a.tag:hover {
 
   .post-content th,
   .post-content td {
-    padding: 0.35rem 0.5rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .post-title {
+    font-size: 1.4rem;
   }
 }
