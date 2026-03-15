@@ -40,13 +40,12 @@ def _build_weekday_prompt() -> str:
 ## Formatting Requirements
 - Post length: 1,200-1,800 words
 - Include a "Key Metrics" bulleted summary near the top (after the opening paragraph)
-- Cite specific numbers with sources (e.g., "per FMP data" or "SEC filings")
+- Cite specific numbers with sources (e.g., "per SEC filings", "FRED data", "BLS data")
 - Reference the included charts by filename (the pipeline will fix paths)
 - Include a "Methodology & Data Sources" section at the end listing:
-  - Financial Modeling Prep (FMP) for financial statements and employee data
-  - SEC EDGAR for XBRL-reported company facts
+  - SEC EDGAR for corporate financial statements and XBRL-reported company facts
   - Federal Reserve Economic Data (FRED) for macroeconomic indicators
-  - Bureau of Labor Statistics (BLS) for sector employment data
+  - Bureau of Labor Statistics (BLS) for sector employment and wage data
 - No clickbait titles or sensational language
 - Output format: Markdown body text only (no YAML frontmatter -- the pipeline adds that)
 - Do NOT wrap the output in markdown code fences
