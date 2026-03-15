@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 from datetime import date
@@ -17,6 +18,7 @@ from frugal_pipeline.data_sources.bls import BLSClient
 from frugal_pipeline.analysis.financials import compute_financial_metrics
 from frugal_pipeline.analysis.labor_lens import compute_labor_metrics
 from frugal_pipeline.analysis.macro_context import get_macro_context
+from frugal_pipeline.analysis.validation import validate_financial_data
 from frugal_pipeline.charts.generator import generate_all_charts
 from frugal_pipeline.content.prompt import build_system_prompt, build_data_prompt
 from frugal_pipeline.content.generator import generate_post, assemble_post
@@ -129,6 +131,30 @@ def run() -> None:
             len(employee_counts),
         )
 
+        # Employee count fallback from company_universe.json
+        if not employee_counts:
+            employee_counts = _employee_fallback_from_universe(
+                selection.ticker, data_dir
+            )
+
+        # Validate data quality
+        validation = validate_financial_data(
+            financial_data, employee_counts, selection.ticker
+        )
+        data_quality_notes: list[str] = []
+        for w in validation.warnings:
+            logger.warning("Data quality: %s", w)
+            data_quality_notes.append(w)
+        if not validation.is_valid:
+            logger.error(
+                "Data validation failed for %s (%s). Cannot produce analysis.",
+                selection.company_name,
+                selection.ticker,
+            )
+            raise SystemExit(1)
+        financial_data = validation.financial_data
+        employee_counts = validation.employee_counts
+
         # Step 3: Fetch macro context
         logger.info("Step 3: Fetching macroeconomic context...")
         sector = selection.sector
@@ -144,10 +170,10 @@ def run() -> None:
         )
         logger.info("Financial metrics: %d years of data", len(financial_metrics.years))
 
-        if len(financial_metrics.years) < 2:
+        if len(financial_metrics.years) < 3:
             logger.error(
                 "Insufficient financial data for %s (%s): only %d years. "
-                "Need at least 2 years for meaningful analysis. "
+                "Need at least 3 years for meaningful analysis. "
                 "Check that CIK is correct and SEC EDGAR has data.",
                 selection.company_name,
                 selection.ticker,
@@ -190,6 +216,7 @@ def run() -> None:
             labor_metrics=labor_metrics,
             macro_context=macro_context,
             chart_paths=chart_paths,
+            data_quality_notes=data_quality_notes,
         )
 
         body = generate_post(system_prompt, data_prompt)
@@ -257,6 +284,40 @@ def run() -> None:
         edgar.close()
         fred.close()
         bls.close()
+
+
+def _employee_fallback_from_universe(
+    ticker: str,
+    data_dir: Path,
+) -> list[tuple[int, int]]:
+    """Try to load employee count from company_universe.json as fallback.
+
+    Returns a list with a single (year, count) tuple if data is available,
+    or an empty list otherwise.
+    """
+    universe_path = data_dir / "company_universe.json"
+    if not universe_path.exists():
+        return []
+
+    try:
+        with open(universe_path) as f:
+            companies = json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        logger.warning("Could not read company universe for employee fallback: %s", exc)
+        return []
+
+    for company in companies:
+        if company.get("ticker") == ticker:
+            emp_count = company.get("employee_count")
+            emp_year = company.get("employee_count_year")
+            if emp_count and emp_year:
+                logger.info(
+                    "Using fallback employee count for %s from company_universe.json: "
+                    "%d employees (%d)",
+                    ticker, emp_count, emp_year,
+                )
+                return [(emp_year, emp_count)]
+    return []
 
 
 def _extract_title(

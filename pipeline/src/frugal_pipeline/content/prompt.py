@@ -91,6 +91,7 @@ def build_data_prompt(
     labor_metrics: LaborMetrics,
     macro_context: MacroContext,
     chart_paths: list[str],
+    data_quality_notes: list[str] | None = None,
 ) -> str:
     """Build the data prompt packaging all metrics for Claude.
 
@@ -164,6 +165,15 @@ def build_data_prompt(
     # Charts
     charts_str = "\n".join(f"  - {f}" for f in chart_filenames) if chart_filenames else "  No charts generated"
 
+    # Data quality notes section
+    quality_section = ""
+    if data_quality_notes:
+        quality_lines = "\n".join(f"  - {note}" for note in data_quality_notes)
+        quality_section = f"""
+
+### Data Quality Notes
+{quality_lines}"""
+
     return f"""## Company Analysis Data Package
 
 **Company**: {company_name} ({ticker})
@@ -190,6 +200,6 @@ def build_data_prompt(
 {macro_str}
 
 ### Available Charts (reference these in the analysis)
-{charts_str}
+{charts_str}{quality_section}
 
 Write the analysis now, following the system prompt guidelines."""
