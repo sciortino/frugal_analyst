@@ -153,6 +153,17 @@ def run() -> None:
         )
         logger.info("Financial metrics: %d years of data", len(financial_metrics.years))
 
+        if len(financial_metrics.years) < 2:
+            logger.error(
+                "Insufficient financial data for %s (%s): only %d years. "
+                "Need at least 2 years for meaningful analysis. "
+                "Check that data source API keys are configured.",
+                selection.company_name,
+                selection.ticker,
+                len(financial_metrics.years),
+            )
+            raise SystemExit(1)
+
         logger.info("Step 5: Computing labor metrics...")
         labor_metrics = compute_labor_metrics(
             financial_metrics, employee_counts, income_statements
