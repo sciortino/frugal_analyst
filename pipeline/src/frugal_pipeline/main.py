@@ -49,6 +49,11 @@ def parse_args() -> argparse.Namespace:
         help="Override output site directory (default: ../../site)",
     )
     parser.add_argument(
+        "--weekend",
+        action="store_true",
+        help="Generate weekend op-ed style post instead of standard analysis",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug logging",
@@ -171,7 +176,9 @@ def run() -> None:
 
         # Step 6: Generate content via Claude
         logger.info("Step 7: Generating content via Claude API...")
-        system_prompt = build_system_prompt()
+        system_prompt = build_system_prompt(weekend=args.weekend)
+        if args.weekend:
+            logger.info("Weekend mode: generating op-ed style analysis")
         data_prompt = build_data_prompt(
             company_name=selection.company_name,
             ticker=selection.ticker,
@@ -189,18 +196,27 @@ def run() -> None:
         title, body_text = _extract_title(body, selection.company_name, selection.ticker)
 
         # Build tags
-        tags = [
+        base_tags = [
             selection.sector.lower(),
             selection.ticker.lower(),
             "labor-economics",
-            "financial-analysis",
         ]
+        if args.weekend:
+            tags = base_tags + ["op-ed", "weekend-edition"]
+        else:
+            tags = base_tags + ["financial-analysis"]
 
         # Build description
-        description = (
-            f"Data-driven analysis of {selection.company_name} ({selection.ticker}) "
-            f"through a labor economics lens."
-        )
+        if args.weekend:
+            description = (
+                f"Weekend op-ed using {selection.company_name} ({selection.ticker}) "
+                f"to explore a bigger question about labor, capital, and the economy."
+            )
+        else:
+            description = (
+                f"Data-driven analysis of {selection.company_name} ({selection.ticker}) "
+                f"through a labor economics lens."
+            )
 
         # Assemble complete post
         content = assemble_post(
@@ -226,7 +242,8 @@ def run() -> None:
                 print(f"\n... [{len(content) - 2000} more characters] ...")
         else:
             logger.info("Step 8: Writing output files...")
-            filename = f"{today.isoformat()}-{selection.ticker.lower()}-analysis.md"
+            suffix = "op-ed" if args.weekend else "analysis"
+            filename = f"{today.isoformat()}-{selection.ticker.lower()}-{suffix}.md"
             write_post(content, filename, blog_dir)
             update_analyzed_log(
                 selection.ticker, selection.company_name, today, data_dir
