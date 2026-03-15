@@ -1,0 +1,18 @@
+---
+interface Props {
+  src: string;
+  title: string;
+}
+
+const { src, title } = Astro.props;
+---
+<div class="audio-player">
+  <div class="audio-player-label">
+    <span class="audio-player-icon">&#9658;</span>
+    Listen to this article
+  </div>
+  <audio controls preload="metadata">
+    <source src={src} type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+</div>

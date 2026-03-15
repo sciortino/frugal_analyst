@@ -32,6 +32,7 @@ keyMetrics:
     value: "Metric Value"
   - label: "Another Metric"
     value: "Another Value"
+audio: "/audio/YYYY-MM-DD-slug.mp3"  # optional — adds audio player + podcast feed
 ---
 ```
 
@@ -39,6 +40,7 @@ keyMetrics:
 4. For charts/images, place PNGs in `site/public/charts/YYYY-MM-DD/` and reference them as `/charts/YYYY-MM-DD/filename.png`
 5. Image captions: put italic text on the line after the image (`*Caption text*`)
 6. Tables use standard Markdown table syntax — numeric columns auto-right-align via CSS
+7. For audio: place MP3 in `site/public/audio/` and add `audio: "/audio/filename.mp3"` to frontmatter
 
 ---
 
