@@ -122,7 +122,7 @@ Output goes to `site/dist/`. Zero JavaScript, pure static HTML/CSS.
 - **Claude prompt/voice**: `pipeline/src/frugal_pipeline/content/prompt.py`
 - **Chart style/types**: `pipeline/src/frugal_pipeline/charts/generator.py`
 - **Company selection logic**: `pipeline/src/frugal_pipeline/company_selector.py`
-- **Data sources**: `pipeline/src/frugal_pipeline/data_sources/` (fmp.py, fred.py, bls.py, sec_edgar.py)
+- **Data sources**: `pipeline/src/frugal_pipeline/data_sources/` (sec_edgar.py, fred.py, bls.py)
 - **Analysis computations**: `pipeline/src/frugal_pipeline/analysis/`
 
 ---
@@ -144,7 +144,6 @@ Add these in **Settings > Secrets > Actions** on the repo:
 
 | Secret | Purpose |
 |--------|---------|
-| `FMP_API_KEY` | Financial Modeling Prep API |
 | `FRED_API_KEY` | Federal Reserve Economic Data |
 | `BLS_API_KEY` | Bureau of Labor Statistics |
 | `ANTHROPIC_API_KEY` | Claude API for content generation |
@@ -157,7 +156,7 @@ Add these in **Settings > Secrets > Actions** on the repo:
 
 - **Build fails**: Run `cd site && npm run build` locally to see errors. Usually a frontmatter schema mismatch.
 - **Missing charts**: Ensure chart PNGs exist at the path referenced in the post. Paths must start with `/charts/`.
-- **Pipeline errors**: Check API keys in `.env`. FMP has a 250 calls/day free limit.
+- **Pipeline errors**: Check API keys in `.env` and ensure CIK numbers are set in `company_universe.json`.
 - **Deploy not triggering**: Deploy only triggers on pushes to `main` that touch `site/**`. Check the Actions tab.
 - **Content not showing**: Verify the post's `date` field is a valid date and the frontmatter matches the Zod schema in `site/src/content.config.ts`.
 

@@ -11,10 +11,17 @@ logger = logging.getLogger(__name__)
 
 def compute_labor_metrics(
     financial_metrics: FinancialMetrics,
-    employee_counts: list[dict],
-    income_statements: list[dict],
+    employee_counts: list[tuple[int, int]],
+    financial_data: list[dict],
 ) -> LaborMetrics:
     """Compute labor-specific metrics from financial data.
+
+    Args:
+        financial_metrics: Pre-computed financial metrics.
+        employee_counts: List of (year, count) tuples from SEC EDGAR.
+        financial_data: List of dicts from SECEdgarClient.get_financial_statements(),
+            sorted oldest-first, with keys: year, revenue, operating_income,
+            net_income, ebitda, sga.
 
     Focuses on the relationship between corporate performance and workforce.
     """
@@ -43,11 +50,10 @@ def compute_labor_metrics(
 
     # Estimated labor cost ratio using SGA as proxy
     # SGA (Selling, General & Administrative) contains most labor costs
-    statements = list(reversed(income_statements))
     estimated_labor_ratio: list[float | None] = []
-    for stmt in statements:
+    for stmt in financial_data:
         try:
-            sga = float(stmt.get("sellingGeneralAndAdministrativeExpenses", 0))
+            sga = float(stmt.get("sga", 0))
             rev = float(stmt.get("revenue", 0))
             if rev > 0 and sga > 0:
                 estimated_labor_ratio.append(round(sga / rev * 100, 2))
@@ -59,10 +65,10 @@ def compute_labor_metrics(
     # Profit-to-estimated-compensation ratio
     # Uses net income / SGA as rough proxy
     profit_to_comp: list[float | None] = []
-    for stmt in statements:
+    for stmt in financial_data:
         try:
-            net_income = float(stmt.get("netIncome", 0))
-            sga = float(stmt.get("sellingGeneralAndAdministrativeExpenses", 0))
+            net_income = float(stmt.get("net_income", 0))
+            sga = float(stmt.get("sga", 0))
             if sga > 0:
                 profit_to_comp.append(round(net_income / sga, 2))
             else:

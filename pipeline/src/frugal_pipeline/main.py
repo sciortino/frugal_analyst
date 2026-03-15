@@ -11,7 +11,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from frugal_pipeline.company_selector import select_company
-from frugal_pipeline.data_sources.fmp import FMPClient
 from frugal_pipeline.data_sources.sec_edgar import SECEdgarClient
 from frugal_pipeline.data_sources.fred import FREDClient
 from frugal_pipeline.data_sources.bls import BLSClient
@@ -96,7 +95,6 @@ def run() -> None:
     logger.info("Starting Frugal Analyst pipeline for %s", today.isoformat())
 
     # Initialize API clients
-    fmp = FMPClient()
     edgar = SECEdgarClient()
     fred = FREDClient()
     bls = BLSClient()
@@ -104,7 +102,7 @@ def run() -> None:
     try:
         # Step 1: Select company
         logger.info("Step 1: Selecting company...")
-        selection = select_company(data_dir, fmp, override_ticker=args.ticker)
+        selection = select_company(data_dir, override_ticker=args.ticker)
         logger.info(
             "Selected: %s (%s) - %s",
             selection.company_name,
@@ -112,35 +110,28 @@ def run() -> None:
             selection.selection_reason,
         )
 
-        # Step 2: Fetch corporate data
-        logger.info("Step 2: Fetching corporate data...")
-        income_statements = fmp.get_income_statements(selection.ticker)
-        key_metrics = fmp.get_key_metrics(selection.ticker)
-        employee_counts_fmp = fmp.get_employee_count(selection.ticker)
-        company_profile = fmp.get_company_profile(selection.ticker)
+        # Step 2: Fetch corporate data from SEC EDGAR
+        if not selection.cik:
+            logger.error(
+                "No CIK number for %s — SEC EDGAR requires a CIK. "
+                "Add it to company_universe.json.",
+                selection.ticker,
+            )
+            raise SystemExit(1)
+
+        logger.info("Step 2: Fetching corporate data from SEC EDGAR (CIK %s)...", selection.cik)
+        financial_data = edgar.get_financial_statements(selection.cik)
+        employee_counts = edgar.get_employee_count(selection.cik)
 
         logger.info(
-            "FMP data: %d income statements, %d key metrics, %d employee records",
-            len(income_statements),
-            len(key_metrics),
-            len(employee_counts_fmp),
+            "EDGAR data: %d years of financials, %d employee records",
+            len(financial_data),
+            len(employee_counts),
         )
-
-        # Supplement with SEC EDGAR if CIK available
-        employee_counts_edgar: list[tuple[int, int]] = []
-        if selection.cik:
-            logger.info("Fetching SEC EDGAR data for CIK %s...", selection.cik)
-            employee_counts_edgar = edgar.get_employee_count(selection.cik)
-            logger.info("EDGAR: %d employee count records", len(employee_counts_edgar))
-
-        # Merge employee data: prefer FMP, fill gaps from EDGAR
-        employee_counts = _merge_employee_data(employee_counts_fmp, employee_counts_edgar)
 
         # Step 3: Fetch macro context
         logger.info("Step 3: Fetching macroeconomic context...")
         sector = selection.sector
-        if company_profile and not sector:
-            sector = company_profile.get("sector", "Unknown")
         macro_context = get_macro_context(sector, fred, bls)
         logger.info("Macro context: unemployment=%.1f%%, sector=%s",
                      macro_context.unemployment_rate or 0,
@@ -149,7 +140,7 @@ def run() -> None:
         # Step 4: Run analysis
         logger.info("Step 4: Computing financial metrics...")
         financial_metrics = compute_financial_metrics(
-            income_statements, key_metrics, employee_counts, selection.ticker
+            financial_data, employee_counts, selection.ticker
         )
         logger.info("Financial metrics: %d years of data", len(financial_metrics.years))
 
@@ -157,7 +148,7 @@ def run() -> None:
             logger.error(
                 "Insufficient financial data for %s (%s): only %d years. "
                 "Need at least 2 years for meaningful analysis. "
-                "Check that data source API keys are configured.",
+                "Check that CIK is correct and SEC EDGAR has data.",
                 selection.company_name,
                 selection.ticker,
                 len(financial_metrics.years),
@@ -166,7 +157,7 @@ def run() -> None:
 
         logger.info("Step 5: Computing labor metrics...")
         labor_metrics = compute_labor_metrics(
-            financial_metrics, employee_counts, income_statements
+            financial_metrics, employee_counts, financial_data
         )
         logger.info("Labor patterns detected: %d", len(labor_metrics.notable_patterns))
         for pattern in labor_metrics.notable_patterns:
@@ -263,47 +254,9 @@ def run() -> None:
 
     finally:
         # Clean up clients
-        fmp.close()
         edgar.close()
         fred.close()
         bls.close()
-
-
-def _merge_employee_data(
-    fmp_data: list[dict],
-    edgar_data: list[tuple[int, int]],
-) -> list[dict]:
-    """Merge employee count data from FMP and EDGAR sources.
-
-    FMP data takes precedence; EDGAR fills gaps.
-    Returns FMP-format dicts.
-    """
-    result_by_year: dict[int, dict] = {}
-
-    # FMP data first
-    for entry in fmp_data:
-        try:
-            period = entry.get("periodOfReport", entry.get("acceptanceTime", ""))
-            year = int(period[:4]) if period else 0
-            if year > 0:
-                result_by_year[year] = entry
-        except (ValueError, TypeError, IndexError):
-            continue
-
-    # Fill from EDGAR
-    for year, count in edgar_data:
-        if year not in result_by_year:
-            result_by_year[year] = {
-                "periodOfReport": f"{year}-12-31",
-                "employeeCount": count,
-                "source": "SEC EDGAR",
-            }
-
-    # Return sorted by year (newest first, matching FMP convention)
-    return [
-        result_by_year[y]
-        for y in sorted(result_by_year.keys(), reverse=True)
-    ]
 
 
 def _extract_title(

@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from frugal_pipeline.models import CompanySelection
-from frugal_pipeline.data_sources.fmp import FMPClient
 
 logger = logging.getLogger(__name__)
 
@@ -18,20 +17,17 @@ COOLDOWN_DAYS = 60
 
 def select_company(
     data_dir: str | Path,
-    fmp_client: FMPClient,
     override_ticker: str | None = None,
 ) -> CompanySelection:
     """Select a company for today's analysis.
 
     Selection priority:
     1. CLI override (--ticker)
-    2. Upcoming earnings reporters in universe (not recently analyzed)
-    3. Events queue (manual overrides in events_queue.json)
-    4. Sector rotation fallback (oldest or never analyzed)
+    2. Events queue (manual overrides in events_queue.json)
+    3. Sector rotation fallback (oldest or never analyzed)
 
     Args:
         data_dir: Path to the data/ directory.
-        fmp_client: FMP client for earnings calendar lookups.
         override_ticker: Ticker override from CLI.
 
     Returns:
@@ -69,17 +65,12 @@ def select_company(
                 selection_reason=f"Manual override (not in universe): {ticker}",
             )
 
-    # 2. Upcoming earnings reporters
-    selection = _check_earnings_calendar(universe, analyzed_log, fmp_client)
-    if selection:
-        return selection
-
-    # 3. Events queue
+    # 2. Events queue
     selection = _check_events_queue(data_path, universe_by_ticker, analyzed_log)
     if selection:
         return selection
 
-    # 4. Sector rotation fallback
+    # 3. Sector rotation fallback
     return _sector_rotation_fallback(universe, analyzed_log)
 
 
@@ -132,50 +123,6 @@ def _last_analyzed_date(ticker: str, analyzed_log: dict) -> datetime | None:
         except (KeyError, ValueError):
             continue
     return max(dates) if dates else None
-
-
-def _check_earnings_calendar(
-    universe: list[dict],
-    analyzed_log: dict,
-    fmp_client: FMPClient,
-) -> CompanySelection | None:
-    """Check for upcoming earnings reporters in the universe."""
-    today = datetime.now()
-    from_date = today.strftime("%Y-%m-%d")
-    to_date = (today + timedelta(days=14)).strftime("%Y-%m-%d")
-
-    universe_tickers = {c["ticker"] for c in universe}
-    ticker_lookup = {c["ticker"]: c for c in universe}
-
-    try:
-        calendar = fmp_client.get_earnings_calendar(from_date, to_date)
-    except Exception as exc:
-        logger.warning("Failed to fetch earnings calendar: %s", exc)
-        return None
-
-    # Find universe companies reporting soon
-    candidates = []
-    for entry in calendar:
-        ticker = entry.get("symbol", "")
-        if ticker in universe_tickers and not _is_recently_analyzed(ticker, analyzed_log):
-            report_date = entry.get("date", "")
-            candidates.append((ticker, report_date))
-
-    if not candidates:
-        return None
-
-    # Pick the soonest reporter
-    candidates.sort(key=lambda x: x[1])
-    ticker, report_date = candidates[0]
-    co = ticker_lookup[ticker]
-
-    return CompanySelection(
-        ticker=ticker,
-        company_name=co["company"],
-        sector=co["sector"],
-        cik=co["cik"],
-        selection_reason=f"Upcoming earnings report on {report_date}",
-    )
 
 
 def _check_events_queue(

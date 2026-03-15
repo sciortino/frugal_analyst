@@ -10,31 +10,23 @@ logger = logging.getLogger(__name__)
 
 
 def compute_financial_metrics(
-    income_statements: list[dict],
-    key_metrics: list[dict],
-    employee_counts: list[dict],
+    financial_data: list[dict],
+    employee_counts: list[tuple[int, int]],
     ticker: str,
 ) -> FinancialMetrics:
-    """Compute multi-year financial metrics from FMP data.
+    """Compute multi-year financial metrics from SEC EDGAR data.
 
-    All input lists are expected newest-first (FMP default ordering).
+    Args:
+        financial_data: List of dicts from SECEdgarClient.get_financial_statements(),
+            sorted oldest-first, with keys: year, revenue, operating_income,
+            net_income, ebitda.
+        employee_counts: List of (year, count) tuples from EDGAR, sorted by year.
+        ticker: Company ticker symbol.
+
     Output trends are oldest-first (chronological).
     """
-    # Reverse to chronological order
-    statements = list(reversed(income_statements))
-    metrics_data = list(reversed(key_metrics))
-
     # Build employee count lookup by year
-    emp_by_year: dict[int, int] = {}
-    for emp in employee_counts:
-        try:
-            period = emp.get("periodOfReport", emp.get("acceptanceTime", ""))
-            year = int(period[:4]) if period else 0
-            count = int(emp.get("employeeCount", 0))
-            if year > 0 and count > 0:
-                emp_by_year[year] = count
-        except (ValueError, TypeError, IndexError):
-            continue
+    emp_by_year: dict[int, int] = dict(employee_counts)
 
     years: list[int] = []
     revenue_trend: list[float] = []
@@ -46,16 +38,15 @@ def compute_financial_metrics(
     emp_counts: list[int] = []
     revenue_growth_yoy: list[float | None] = []
 
-    for stmt in statements:
+    for stmt in financial_data:
         try:
-            date_str = stmt.get("date", stmt.get("fillingDate", ""))
-            year = int(date_str[:4]) if date_str else 0
+            year = int(stmt.get("year", 0))
             if year == 0:
                 continue
 
             revenue = float(stmt.get("revenue", 0))
-            operating_income = float(stmt.get("operatingIncome", 0))
-            net_income = float(stmt.get("netIncome", 0))
+            operating_income = float(stmt.get("operating_income", 0))
+            net_income = float(stmt.get("net_income", 0))
             ebitda = float(stmt.get("ebitda", 0))
 
             years.append(year)

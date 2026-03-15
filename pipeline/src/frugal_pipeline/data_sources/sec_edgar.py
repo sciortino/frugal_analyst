@@ -122,6 +122,151 @@ class SECEdgarClient:
 
         return []
 
+    def get_net_income(self, cik: str) -> list[tuple[int, float]]:
+        """Extract annual net income from EDGAR XBRL facts.
+
+        Tries multiple net income concept names used across filers.
+        Returns list of (year, net_income) tuples sorted by year ascending.
+        """
+        facts = self.get_company_facts(cik)
+        if not facts:
+            return []
+
+        gaap_facts = facts.get("facts", {}).get("us-gaap", {})
+
+        concepts = [
+            "NetIncomeLoss",
+            "ProfitLoss",
+            "NetIncomeLossAvailableToCommonStockholdersBasic",
+        ]
+
+        for concept in concepts:
+            if concept in gaap_facts:
+                units = gaap_facts[concept].get("units", {})
+                usd_data = units.get("USD", [])
+                if usd_data:
+                    return self._extract_annual(usd_data)
+
+        return []
+
+    def get_operating_income(self, cik: str) -> list[tuple[int, float]]:
+        """Extract annual operating income from EDGAR XBRL facts.
+
+        Returns list of (year, operating_income) tuples sorted by year ascending.
+        """
+        facts = self.get_company_facts(cik)
+        if not facts:
+            return []
+
+        gaap_facts = facts.get("facts", {}).get("us-gaap", {})
+
+        concepts = ["OperatingIncomeLoss"]
+
+        for concept in concepts:
+            if concept in gaap_facts:
+                units = gaap_facts[concept].get("units", {})
+                usd_data = units.get("USD", [])
+                if usd_data:
+                    return self._extract_annual(usd_data)
+
+        return []
+
+    def get_ebitda(self, cik: str) -> list[tuple[int, float]]:
+        """Extract annual EBITDA from EDGAR XBRL facts.
+
+        EBITDA is not always reported directly in XBRL. If the concept is not
+        found, returns an empty list (callers should handle gracefully).
+        Returns list of (year, ebitda) tuples sorted by year ascending.
+        """
+        facts = self.get_company_facts(cik)
+        if not facts:
+            return []
+
+        gaap_facts = facts.get("facts", {}).get("us-gaap", {})
+
+        concepts = [
+            "EarningsBeforeInterestTaxesDepreciationAndAmortization",
+        ]
+
+        for concept in concepts:
+            if concept in gaap_facts:
+                units = gaap_facts[concept].get("units", {})
+                usd_data = units.get("USD", [])
+                if usd_data:
+                    return self._extract_annual(usd_data)
+
+        return []
+
+    def _get_sga(self, cik: str) -> list[tuple[int, float]]:
+        """Extract annual SGA expenses from EDGAR XBRL facts.
+
+        Used as a proxy for labor costs in labor-lens analysis.
+        Returns list of (year, sga) tuples sorted by year ascending.
+        """
+        facts = self.get_company_facts(cik)
+        if not facts:
+            return []
+
+        gaap_facts = facts.get("facts", {}).get("us-gaap", {})
+
+        concepts = [
+            "SellingGeneralAndAdministrativeExpense",
+            "GeneralAndAdministrativeExpense",
+        ]
+
+        for concept in concepts:
+            if concept in gaap_facts:
+                units = gaap_facts[concept].get("units", {})
+                usd_data = units.get("USD", [])
+                if usd_data:
+                    return self._extract_annual(usd_data)
+
+        return []
+
+    def get_financial_statements(self, cik: str) -> list[dict]:
+        """Fetch all financial metrics and merge into annual statements.
+
+        Calls get_revenue, get_operating_income, get_net_income, get_ebitda,
+        and _get_sga, then merges into a list of dicts sorted oldest-first.
+
+        Each dict has keys: year, revenue, operating_income, net_income,
+        ebitda, sga. Missing values default to 0.
+        """
+        revenue_data = self.get_revenue(cik)
+        operating_data = self.get_operating_income(cik)
+        net_income_data = self.get_net_income(cik)
+        ebitda_data = self.get_ebitda(cik)
+        sga_data = self._get_sga(cik)
+
+        # Collect all years
+        all_years: set[int] = set()
+        for series in [revenue_data, operating_data, net_income_data, ebitda_data, sga_data]:
+            for year, _ in series:
+                all_years.add(year)
+
+        if not all_years:
+            return []
+
+        # Build lookup dicts
+        rev_lookup = dict(revenue_data)
+        op_lookup = dict(operating_data)
+        ni_lookup = dict(net_income_data)
+        ebitda_lookup = dict(ebitda_data)
+        sga_lookup = dict(sga_data)
+
+        results = []
+        for year in sorted(all_years):
+            results.append({
+                "year": year,
+                "revenue": rev_lookup.get(year, 0),
+                "operating_income": op_lookup.get(year, 0),
+                "net_income": ni_lookup.get(year, 0),
+                "ebitda": ebitda_lookup.get(year, 0),
+                "sga": sga_lookup.get(year, 0),
+            })
+
+        return results
+
     def _extract_annual(self, observations: list[dict]) -> list[tuple[int, float]]:
         """Extract annual 10-K values from XBRL observations."""
         results: dict[int, float] = {}
