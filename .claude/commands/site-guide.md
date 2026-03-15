@@ -112,6 +112,7 @@ Output goes to `site/dist/`. Zero JavaScript, pure static HTML/CSS.
 - **Post layout**: `site/src/layouts/PostLayout.astro` — controls how articles render
 - **Homepage**: `site/src/pages/index.astro` — shows latest 10 posts
 - **About page**: `site/src/pages/about.astro`
+- **Tools page**: `site/src/pages/tools.astro` — affiliate/tools-we-use page with FTC disclosure
 - **SEO**: `site/src/components/SEO.astro` — Open Graph, Twitter Cards, JSON-LD
 
 ---
@@ -170,6 +171,7 @@ Add these in **Settings > Secrets > Actions** on the repo:
 | Chart images | `site/public/charts/YYYY-MM-DD/` |
 | CSS styling | `site/src/styles/global.css` |
 | Post template | `site/src/layouts/PostLayout.astro` |
+| Tools page | `site/src/pages/tools.astro` |
 | Content schema | `site/src/content.config.ts` |
 | Claude prompt | `pipeline/src/frugal_pipeline/content/prompt.py` |
 | Company list | `data/company_universe.json` |

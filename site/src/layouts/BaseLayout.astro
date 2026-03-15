@@ -17,6 +17,9 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="alternate" type="application/rss+xml" title="The Frugal Analyst" href="/rss.xml" />
     <slot name="head" />
     {gaId && (
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>

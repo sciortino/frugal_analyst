@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SEO from '../components/SEO.astro';
+
+const tools = [
+  {
+    category: "AI & Analysis",
+    id: "ai-analysis",
+    items: [
+      {
+        name: "Anthropic (Claude)",
+        url: "#affiliate-link", // Sign up: anthropic.com (no formal affiliate program yet — use referral)
+        description: "Powers every analysis on this site. Claude reads financial filings, calculates labor-adjusted metrics, and writes each daily post from raw data to published prose.",
+      },
+      {
+        name: "Financial Modeling Prep",
+        url: "#affiliate-link", // Sign up: site.financialmodelingprep.com/affiliate
+        description: "Our primary financial data API. Standardized income statements, balance sheets, and ratios — so we don't have to parse raw XBRL from every filing.",
+      },
+    ],
+  },
+  {
+    category: "Hosting & Development",
+    id: "hosting-dev",
+    items: [
+      {
+        name: "GitHub Pages",
+        url: "https://pages.github.com",
+        description: "Free static site hosting with automatic deploys on every merge. Hard to beat the price.",
+      },
+      {
+        name: "Astro",
+        url: "https://astro.build",
+        description: "The static site framework behind this site. Ships zero JavaScript to the browser by default — just fast, clean HTML.",
+      },
+      {
+        name: "Python + uv",
+        url: "https://docs.astral.sh/uv/",
+        description: "Our data pipeline runs on Python, managed by uv for fast, reproducible dependency resolution and script execution.",
+      },
+    ],
+  },
+  {
+    category: "Data Sources",
+    id: "data-sources",
+    items: [
+      {
+        name: "FRED",
+        url: "https://fred.stlouisfed.org",
+        description: "Federal Reserve Economic Data — macroeconomic indicators, interest rates, and sector benchmarks.",
+      },
+      {
+        name: "Bureau of Labor Statistics",
+        url: "https://www.bls.gov",
+        description: "Employment, wages, and labor market data. Essential for the labor economics lens that defines our analysis.",
+      },
+      {
+        name: "SEC EDGAR",
+        url: "https://www.sec.gov/edgar",
+        description: "The authoritative source for corporate filings. We pull 10-K and 10-Q data directly when we need to go beyond our API.",
+      },
+    ],
+  },
+  {
+    category: "Services",
+    id: "services",
+    items: [
+      {
+        name: "Squarespace",
+        url: "#affiliate-link", // Sign up: squarespace.com/affiliates
+        description: "Domain registration and DNS for frugalanalyst.com. Simple management, reasonable renewal pricing.",
+      },
+      {
+        name: "Google Workspace",
+        url: "#affiliate-link", // Sign up: workspace.google.com/affiliate
+        description: "Email, docs, and project coordination. Our @frugalanalyst.com email runs through Workspace.",
+      },
+    ],
+  },
+];
+---
+<BaseLayout title="Tools We Use | The Frugal Analyst">
+  <SEO
+    slot="head"
+    title="Tools We Use | The Frugal Analyst"
+    description="The tools, APIs, and services that power The Frugal Analyst's automated daily financial analysis."
+  />
+
+  <div class="tools-page">
+    <h1>Tools We Use</h1>
+    <p class="tools-intro">
+      Everything that powers The Frugal Analyst — from the AI that writes our daily analysis to the
+      government databases we pull data from. This is the actual stack, not a curated marketing list.
+    </p>
+
+    <nav class="tools-nav">
+      {tools.map((section) => (
+        <a href={`#${section.id}`}>{section.category}</a>
+      ))}
+    </nav>
+
+    {tools.map((section) => (
+      <section class="tools-section">
+        <h2 id={section.id}>{section.category}</h2>
+        <ul class="tools-list">
+          {section.items.map((tool) => (
+            <li>
+              <a
+                href={tool.url}
+                target={tool.url !== "#affiliate-link" ? "_blank" : undefined}
+                rel={tool.url !== "#affiliate-link" ? "noopener noreferrer" : undefined}
+              >{tool.name}</a> — {tool.description}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <div class="disclaimer">
+      <p>
+        <strong>Disclosure:</strong> Some links on this page are affiliate links. The Frugal Analyst
+        may receive a small commission if you sign up or make a purchase — at no extra cost to you.
+        We only list tools we actually use. Affiliate relationships never influence our editorial
+        content or analysis.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

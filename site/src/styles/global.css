@@ -163,6 +163,12 @@ main {
   text-decoration: none;
 }
 
+.site-nav a.active {
+  color: var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 0.15rem;
+}
+
 /* === Footer === */
 .site-footer {
   border-top: 2px solid var(--color-accent);
@@ -177,6 +183,27 @@ main {
   font-size: 0.78rem;
   color: var(--color-text-muted);
   line-height: 1.6;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-nav a {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+.footer-nav a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
 .site-footer p {
@@ -475,6 +502,109 @@ a.tag:hover {
   border-bottom: 1px solid var(--color-border-light);
   padding-bottom: 0.35rem;
   margin-top: 1rem;
+}
+
+/* === Tools Page === */
+.tools-page h1 {
+  margin-bottom: 0.75rem;
+}
+
+.tools-intro {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.tools-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: 0.85rem;
+}
+
+.tools-nav a {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.tools-nav a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.tools-section {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.tools-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tools-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  scroll-margin-top: 2rem;
+}
+
+.tools-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tools-list li {
+  margin-bottom: 0.85rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.tools-list li:last-child {
+  margin-bottom: 0;
+}
+
+.tools-list a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+
+.tools-list a:hover {
+  color: var(--color-accent-light);
+}
+
+/* === 404 Page === */
+.not-found {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.not-found h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+}
+
+.not-found p {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
 }
 
 /* === About Page === */
