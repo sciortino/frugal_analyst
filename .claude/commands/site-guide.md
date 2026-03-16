@@ -44,6 +44,47 @@ audio: "/audio/YYYY-MM-DD-slug.mp3"  # optional — adds audio player + podcast 
 
 ---
 
+## Audio & Podcast Workflow
+
+### Recording
+Record via QuickTime Player (File > New Audio Recording) or Voice Memos. Save raw file anywhere accessible.
+
+### Processing (ffmpeg)
+```bash
+ffmpeg -i /path/to/raw.m4a \
+  -af "silenceremove=start_periods=1:start_silence=0.3:start_threshold=-35dB:stop_periods=-1:stop_silence=0.8:stop_threshold=-35dB,loudnorm=I=-16:TP=-1.5:LRA=11,atempo=1.2" \
+  -codec:a libmp3lame -qscale:a 2 -ar 44100 \
+  site/public/audio/SLUG.mp3 -y
+```
+Trims silence, normalizes to broadcast levels (-16 LUFS), speeds up 1.2x.
+
+### Scroll Sync (pywhispercpp — local, no API keys)
+```bash
+cd pipeline && uv run python ../site/scripts/align-audio.py \
+  ../site/src/content/blog/SLUG.md \
+  ../site/public/audio/SLUG.mp3 \
+  ../site/public/audio/sync/SLUG.json
+```
+Runs Whisper locally via whisper.cpp C++ bindings. Uses Metal GPU on Apple Silicon. Generates paragraph-level timestamps for the scroll-sync audio player. The `base` model (147MB) is cached after first download.
+
+### What It Produces
+- **Audio player** with SYNC toggle on the post page
+- **Current paragraph highlights** with accent border as audio plays
+- **Page auto-scrolls** to follow narration
+- **Past paragraphs dim** for reading focus
+- **Podcast feed** at `/podcast.xml` — only posts with `audio` field appear
+
+### Key Files
+| What | Where |
+|------|-------|
+| Audio files | `site/public/audio/*.mp3` |
+| Sync JSON files | `site/public/audio/sync/*.json` |
+| Alignment script | `site/scripts/align-audio.py` |
+| AudioPlayer component | `site/src/components/AudioPlayer.astro` |
+| Podcast feed | `site/src/pages/podcast.xml.ts` |
+
+---
+
 ## Editing an Existing Post
 
 - Posts live in `site/src/content/blog/` as `.md` files
