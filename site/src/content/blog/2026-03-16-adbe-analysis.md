@@ -61,11 +61,11 @@ When profit per dollar of SGA goes from 2x to 4.5x, the excess value has to go s
 
 The subscription model didn't just change Adobe's revenue. It changed the leverage between capital and labor. Every dollar of worker effort now generates more revenue that the company keeps more of. The workers are more productive, but the gains accrue disproportionately to the business.
 
-## The Template Problem
+## A Story That Already Came True
 
-Adobe's pivot is now the playbook. Microsoft did it with Office 365. Autodesk did it with AutoCAD. The entire enterprise software industry is subscription-first. Each conversion follows the same pattern: short-term pain, then permanently higher ratios of revenue and profit to overhead.
+This isn't a warning about what might happen — it already has. Adobe was early, but the rest of the industry followed. Microsoft moved Office to 365. Autodesk converted AutoCAD. Salesforce was subscription-native from day one. Today, virtually every major software company runs on recurring revenue. Each conversion followed the same pattern Adobe pioneered: short-term pain, then permanently higher ratios of revenue and profit to overhead.
 
-The question isn't whether subscriptions are good business — the data is unambiguous. The question is what happens to an economy when every successful software company discovers it can grow revenue 6x faster than the cost of its workforce. Adobe's 30,600 employees serve hundreds of millions of users. The information/technology sector shed 5.8% of its workforce last year per [BLS](https://www.bls.gov/ces/) even as companies like Adobe posted record revenue.
+The result is an entire industry that has structurally decoupled revenue growth from workforce growth. Adobe's 30,600 employees serve hundreds of millions of users. The information/technology sector shed 5.8% of its workforce last year per [BLS](https://www.bls.gov/ces/) even as companies like Adobe posted record revenue.
 
 Adobe democratized creative tools — that's real value. But the subscription math shows that the model's greatest efficiency isn't serving customers better. It's decoupling revenue growth from the people who make it possible.
 
