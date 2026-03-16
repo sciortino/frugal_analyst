@@ -43,8 +43,15 @@ def extract_paragraphs(md_path: str) -> list[dict]:
         clean = re.sub(r"!\[.*?\]\(.*?\)", "", clean)  # image refs
         clean = " ".join(clean.split())  # normalize whitespace
 
-        if len(clean) < 5:
-            continue  # skip very short blocks (dividers, image captions, etc.)
+        # Skip images, captions, and very short blocks
+        if block.startswith("![") or block.startswith("*") and block.endswith("*"):
+            continue  # image refs and italic captions
+        if re.match(r"^#{1,6}\s+", block):
+            continue  # section headers — not read aloud
+        if block.startswith("---"):
+            continue  # horizontal rules
+        if len(clean) < 10:
+            continue  # dividers, short fragments
 
         # Skip data sources / metadata sections
         if clean.startswith("Data Sources") or clean.startswith("Corporate financials"):

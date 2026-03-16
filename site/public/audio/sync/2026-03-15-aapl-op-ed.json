@@ -3,143 +3,101 @@
     {
       "index": 0,
       "start": 0.0,
-      "end": 21.72,
+      "end": 23.8,
       "confidence": 0.9
     },
     {
       "index": 1,
-      "start": 21.72,
-      "end": 32.76,
+      "start": 23.8,
+      "end": 36.52,
       "confidence": 0.9
     },
     {
       "index": 2,
-      "start": 32.76,
-      "end": 43.56,
+      "start": 36.52,
+      "end": 62.88,
       "confidence": 0.9
     },
     {
       "index": 3,
-      "start": 43.56,
-      "end": 43.56,
-      "confidence": 0.9
-    },
-    {
-      "index": 4,
-      "start": 43.56,
-      "end": 65.72,
-      "confidence": 0.9
-    },
-    {
-      "index": 5,
-      "start": 65.72,
+      "start": 62.88,
       "end": 84.48,
       "confidence": 0.9
     },
     {
-      "index": 6,
+      "index": 4,
       "start": 84.48,
       "end": 97.24,
       "confidence": 0.9
     },
     {
+      "index": 5,
+      "start": 102.88,
+      "end": 102.88,
+      "confidence": 0.9
+    },
+    {
+      "index": 6,
+      "start": 102.88,
+      "end": 127.88,
+      "confidence": 0.9
+    },
+    {
       "index": 7,
-      "start": 97.24,
-      "end": 115.96,
+      "start": 127.88,
+      "end": 149.64,
       "confidence": 0.9
     },
     {
       "index": 8,
-      "start": 115.96,
-      "end": 115.96,
+      "start": 151.04,
+      "end": 174.08,
       "confidence": 0.9
     },
     {
       "index": 9,
-      "start": 115.96,
-      "end": 115.96,
-      "confidence": 0.9
-    },
-    {
-      "index": 10,
-      "start": 115.96,
-      "end": 139.6,
-      "confidence": 0.9
-    },
-    {
-      "index": 11,
-      "start": 139.88,
-      "end": 151.04,
-      "confidence": 0.9
-    },
-    {
-      "index": 12,
-      "start": 151.04,
-      "end": 167.96,
-      "confidence": 0.9
-    },
-    {
-      "index": 13,
-      "start": 167.96,
+      "start": 174.08,
       "end": 188.52,
       "confidence": 0.9
     },
     {
-      "index": 14,
+      "index": 10,
       "start": 188.52,
-      "end": 201.36,
+      "end": 210.28,
+      "confidence": 0.9
+    },
+    {
+      "index": 11,
+      "start": 210.28,
+      "end": 233.44,
+      "confidence": 0.9
+    },
+    {
+      "index": 12,
+      "start": 233.44,
+      "end": 257.24,
+      "confidence": 0.9
+    },
+    {
+      "index": 13,
+      "start": 257.24,
+      "end": 272.44,
+      "confidence": 0.9
+    },
+    {
+      "index": 14,
+      "start": 274.56,
+      "end": 296.48,
       "confidence": 0.9
     },
     {
       "index": 15,
-      "start": 203.96,
-      "end": 203.96,
+      "start": 296.48,
+      "end": 310.48,
       "confidence": 0.9
     },
     {
       "index": 16,
-      "start": 203.96,
-      "end": 223.16,
-      "confidence": 0.9
-    },
-    {
-      "index": 17,
-      "start": 223.16,
-      "end": 242.2,
-      "confidence": 0.9
-    },
-    {
-      "index": 18,
-      "start": 242.2,
-      "end": 248.44,
-      "confidence": 0.9
-    },
-    {
-      "index": 19,
-      "start": 248.44,
-      "end": 267.6,
-      "confidence": 0.9
-    },
-    {
-      "index": 20,
-      "start": 267.6,
-      "end": 281.48,
-      "confidence": 0.9
-    },
-    {
-      "index": 21,
-      "start": 281.48,
-      "end": 300.16,
-      "confidence": 0.9
-    },
-    {
-      "index": 22,
-      "start": 300.16,
-      "end": 316.2,
-      "confidence": 0.9
-    },
-    {
-      "index": 23,
       "start": 316.2,
       "end": 338.56,
       "confidence": 0.9

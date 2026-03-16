@@ -47,14 +47,14 @@ Process the raw recording with ffmpeg to normalize levels, trim dead air, and op
 
 ```bash
 ffmpeg -i /path/to/raw-recording.m4a \
-  -af "silenceremove=start_periods=1:start_silence=0.3:start_threshold=-35dB:stop_periods=-1:stop_silence=0.8:stop_threshold=-35dB,loudnorm=I=-16:TP=-1.5:LRA=11,atempo=1.2" \
+  -af "silenceremove=start_periods=1:start_silence=0.3:start_threshold=-35dB:stop_periods=-1:stop_silence=0.8:stop_threshold=-35dB,loudnorm=I=-19:TP=-3:LRA=11,atempo=1.2" \
   -codec:a libmp3lame -qscale:a 2 -ar 44100 \
   site/public/audio/YYYY-MM-DD-slug.mp3 -y
 ```
 
 This does three things:
 - **Trims silence** throughout (>0.8s pauses trimmed, leading silence removed)
-- **Normalizes levels** to -16 LUFS (broadcast standard)
+- **Normalizes levels** to -19 LUFS (comfortable podcast level)
 - **Speeds up to 1.2x** (natural sounding, saves ~17% runtime)
 
 Adjust `atempo` if the user wants a different speed (1.0 = original, 1.1 = slight speedup, 1.2 = recommended).
