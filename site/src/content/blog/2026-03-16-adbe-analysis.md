@@ -29,12 +29,12 @@ Adobe generates $703,000 in revenue per employee — roughly 2.5 times the Fortu
 
 ## The Subscription Pivot
 
-Adobe's financial arc is a corporate phoenix story. In 2007 it was a $3.16B software vendor with healthy 27% operating margins ([SEC EDGAR XBRL](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000796343&type=10-K)). Then it bet the company on subscriptions. Operating margins collapsed to 9.9% in 2014 as Adobe cannibalized its own high-margin perpetual license business — trading $1,300 one-time Creative Suite purchases for $54/month Creative Cloud subscriptions.
+In 2007, Adobe was a $3.16B software vendor with healthy 27% operating margins ([SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000796343&type=10-K)). Then it made a bet that looked reckless at the time: kill the $1,300 Creative Suite and replace it with a $54/month subscription. Margins cratered to 9.9% in 2014 as the old revenue model died faster than the new one scaled.
 
 ![Adobe Margin Trends](/charts/2026-03-16/adbe_margin_trends.png)
-*Operating and net margins from 2007-2025. The 2013-2014 trough marks the subscription transition; the recovery since has exceeded pre-pivot peaks.*
+*Operating and net margins from 2007-2025. The 2013-2014 trough marks the subscription transition.*
 
-The recovery has been remarkable. Revenue grew from $4.15B in 2014 to $21.50B in 2024 — a five-fold increase in a decade. Operating margins not only recovered but exceeded their pre-crisis peaks, reaching 31.4% in 2024, with projections of 36.6% for 2025 at $23.77B in revenue.
+The bet paid off — for the business. Revenue grew from $4.15B in 2014 to $21.50B in 2024, a five-fold increase in a decade. Operating margins hit 31.4%, higher than the pre-pivot peaks, with projections of 36.6% for 2025. But the subscription model didn't just change Adobe's revenue structure. It fundamentally changed who benefits from the company's growth.
 
 ## The Labor Equation
 
