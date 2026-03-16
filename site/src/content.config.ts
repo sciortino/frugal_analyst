@@ -16,7 +16,8 @@ const blog = defineCollection({
         label: z.string(),
         value: z.string(),
       })
-    ),
+    ).optional().default([]),
+    audio: z.string().optional(),
   }),
 });
 
