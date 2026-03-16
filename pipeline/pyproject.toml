@@ -11,8 +11,10 @@ dependencies = [
     "anthropic>=0.84.0",
     "httpx>=0.28.1",
     "matplotlib>=3.10.8",
+    "openai>=2.28.0",
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.2",
+    "pywhispercpp>=1.4.1",
 ]
 
 [build-system]

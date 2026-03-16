@@ -1,0 +1,155 @@
+{
+  "paragraphs": [
+    {
+      "index": 0,
+      "start": 0.0,
+      "end": 12.88,
+      "confidence": 0.83
+    },
+    {
+      "index": 1,
+      "start": 264.2,
+      "end": 274.56,
+      "confidence": 0.39
+    },
+    {
+      "index": 2,
+      "start": 267.6,
+      "end": 281.48,
+      "confidence": 0.37
+    },
+    {
+      "index": 3,
+      "start": 274.56,
+      "end": 277.72,
+      "confidence": 0.39
+    },
+    {
+      "index": 4,
+      "start": 304.24,
+      "end": 317.2,
+      "confidence": 0.34
+    },
+    {
+      "index": 5,
+      "start": 310.48,
+      "end": 323.48,
+      "confidence": 0.3
+    },
+    {
+      "index": 6,
+      "start": 323.48,
+      "end": 338.52,
+      "confidence": 0.35
+    },
+    {
+      "index": 7,
+      "start": 338.52,
+      "end": 330.56,
+      "confidence": 0.1
+    },
+    {
+      "index": 8,
+      "start": 330.56,
+      "end": 338.52,
+      "confidence": 0.34
+    },
+    {
+      "index": 9,
+      "start": 338.52,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 10,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 11,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 12,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 13,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 14,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 15,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 16,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 17,
+      "start": 337.2,
+      "end": 337.2,
+      "confidence": 0.1
+    },
+    {
+      "index": 18,
+      "start": 337.2,
+      "end": 338.52,
+      "confidence": 0.41
+    },
+    {
+      "index": 19,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    },
+    {
+      "index": 20,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    },
+    {
+      "index": 21,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    },
+    {
+      "index": 22,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    },
+    {
+      "index": 23,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    },
+    {
+      "index": 24,
+      "start": 338.52,
+      "end": 338.52,
+      "confidence": 0.1
+    }
+  ],
+  "duration": 338.52
+}

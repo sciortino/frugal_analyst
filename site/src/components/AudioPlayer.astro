@@ -2,17 +2,96 @@
 interface Props {
   src: string;
   title: string;
+  syncFile?: string;
 }
 
-const { src, title } = Astro.props;
+const { src, title, syncFile } = Astro.props;
 ---
-<div class="audio-player">
+<div class="audio-player" data-sync-file={syncFile}>
   <div class="audio-player-label">
     <span class="audio-player-icon">&#9658;</span>
     Listen to this article
   </div>
-  <audio controls preload="metadata">
-    <source src={src} type="audio/mpeg" />
-    Your browser does not support the audio element.
-  </audio>
+  <div class="audio-player-controls">
+    <audio controls preload="metadata" id="post-audio">
+      <source src={src} type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    {syncFile && (
+      <button class="sync-toggle" id="sync-toggle" title="Toggle scroll sync">
+        SYNC
+      </button>
+    )}
+  </div>
 </div>
+
+{syncFile && (
+  <script define:vars={{ syncFile }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const audio = document.getElementById('post-audio');
+      const toggle = document.getElementById('sync-toggle');
+      const content = document.querySelector('.post-content');
+      if (!audio || !content) return;
+
+      let syncEnabled = true;
+      let syncData = null;
+      let paragraphs = [];
+
+      fetch(syncFile)
+        .then(r => r.json())
+        .then(data => {
+          syncData = data;
+          paragraphs = Array.from(content.querySelectorAll('p, h2, h3, blockquote, ul, ol'));
+        })
+        .catch(() => {
+          if (toggle) toggle.style.display = 'none';
+        });
+
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          syncEnabled = !syncEnabled;
+          toggle.classList.toggle('active', syncEnabled);
+          toggle.textContent = syncEnabled ? 'SYNC' : 'SYNC OFF';
+          if (!syncEnabled) {
+            paragraphs.forEach(p => p.classList.remove('audio-active', 'audio-past'));
+          }
+        });
+        toggle.classList.add('active');
+      }
+
+      audio.addEventListener('timeupdate', () => {
+        if (!syncEnabled || !syncData || !paragraphs.length) return;
+
+        const t = audio.currentTime;
+        const aligned = syncData.paragraphs;
+
+        for (let i = 0; i < aligned.length && i < paragraphs.length; i++) {
+          const a = aligned[i];
+          const el = paragraphs[i];
+          if (!el || a.start == null) continue;
+
+          if (t >= a.start && t < a.end) {
+            if (!el.classList.contains('audio-active')) {
+              paragraphs.forEach(p => p.classList.remove('audio-active'));
+              el.classList.add('audio-active');
+              el.classList.add('audio-past');
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          } else if (t >= a.end) {
+            el.classList.remove('audio-active');
+            el.classList.add('audio-past');
+          } else {
+            el.classList.remove('audio-active');
+            el.classList.remove('audio-past');
+          }
+        }
+      });
+
+      audio.addEventListener('seeked', () => {
+        paragraphs.forEach(p => {
+          p.classList.remove('audio-active', 'audio-past');
+        });
+      });
+    });
+  </script>
+)}

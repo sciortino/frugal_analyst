@@ -275,9 +275,57 @@ main {
   margin-right: 0.3rem;
 }
 
-.audio-player audio {
-  width: 100%;
+.audio-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.audio-player-controls audio {
+  flex: 1;
   height: 36px;
+}
+
+.sync-toggle {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.sync-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.sync-toggle.active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(44, 62, 107, 0.08);
+}
+
+.post-content .audio-active {
+  background: rgba(44, 62, 107, 0.06);
+  border-left: 2px solid var(--color-accent);
+  padding-left: 0.75rem;
+  margin-left: -0.85rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.post-content .audio-past {
+  opacity: 0.6;
+  transition: opacity 0.5s;
+}
+
+.post-content .audio-active.audio-past {
+  opacity: 1;
 }
 
 /* === Tags === */
