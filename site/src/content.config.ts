@@ -18,6 +18,7 @@ const blog = defineCollection({
       })
     ).optional().default([]),
     audio: z.string().optional(),
+    audioAI: z.boolean().optional().default(false),
   }),
 });
 
