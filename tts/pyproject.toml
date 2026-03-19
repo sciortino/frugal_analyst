@@ -1,0 +1,17 @@
+[project]
+name = "frugal-tts"
+version = "0.1.0"
+description = "TTS audio generation for Frugal Analyst blog posts"
+requires-python = ">=3.10"
+dependencies = [
+    "kokoro>=0.7.16",
+    "soundfile",
+    "numpy",
+]
+
+[tool.uv]
+environments = ["sys_platform == 'darwin' and platform_machine == 'arm64'"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

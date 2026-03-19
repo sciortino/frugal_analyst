@@ -3,14 +3,16 @@ interface Props {
   src: string;
   title: string;
   syncFile?: string;
+  aiGenerated?: boolean;
 }
 
-const { src, title, syncFile } = Astro.props;
+const { src, title, syncFile, aiGenerated } = Astro.props;
 ---
 <div class="audio-player" data-sync-file={syncFile}>
   <div class="audio-player-label">
     <span class="audio-player-icon">&#9658;</span>
     Listen to this article
+    {aiGenerated && <span class="audio-ai-badge">AI-generated audio</span>}
   </div>
   <div class="audio-player-controls">
     <audio controls preload="metadata" id="post-audio">

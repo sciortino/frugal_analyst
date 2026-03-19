@@ -14,9 +14,10 @@ interface Props {
   description: string;
   keyMetrics: { label: string; value: string }[];
   audio?: string;
+  audioAI?: boolean;
 }
 
-const { title, date, ticker, company, sector, tags, description, keyMetrics, audio } = Astro.props;
+const { title, date, ticker, company, sector, tags, description, keyMetrics, audio, audioAI } = Astro.props;
 const syncFile = audio ? audio.replace('/audio/', '/audio/sync/').replace('.mp3', '.json') : undefined;
 const formattedDate = date.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -43,7 +44,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
       </div>
     </header>
 
-    {audio && <AudioPlayer src={audio} title={title} syncFile={syncFile} />}
+    {audio && <AudioPlayer src={audio} title={title} syncFile={syncFile} aiGenerated={audioAI} />}
 
     {keyMetrics.length > 0 && (
       <div class="key-metrics">
