@@ -104,7 +104,7 @@ def run() -> None:
     try:
         # Step 1: Select company
         logger.info("Step 1: Selecting company...")
-        selection = select_company(data_dir, override_ticker=args.ticker)
+        selection = select_company(data_dir, override_ticker=args.ticker, blog_dir=blog_dir)
         logger.info(
             "Selected: %s (%s) - %s",
             selection.company_name,
