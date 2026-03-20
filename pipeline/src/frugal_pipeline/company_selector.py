@@ -18,6 +18,7 @@ COOLDOWN_DAYS = 60
 def select_company(
     data_dir: str | Path,
     override_ticker: str | None = None,
+    blog_dir: str | Path | None = None,
 ) -> CompanySelection:
     """Select a company for today's analysis.
 
@@ -36,6 +37,10 @@ def select_company(
     data_path = Path(data_dir)
     universe = _load_universe(data_path)
     analyzed_log = _load_analyzed_log(data_path)
+
+    # Merge in coverage from existing blog posts (catches manually written posts)
+    if blog_dir is not None:
+        analyzed_log = _merge_blog_coverage(Path(blog_dir), analyzed_log)
 
     if not universe:
         raise RuntimeError(f"No companies in {data_path / 'company_universe.json'}")
@@ -72,6 +77,58 @@ def select_company(
 
     # 3. Sector rotation fallback
     return _sector_rotation_fallback(universe, analyzed_log)
+
+
+def _merge_blog_coverage(blog_dir: Path, analyzed_log: dict) -> dict:
+    """Scan the blog directory and merge any ticker/date pairs not already in the log.
+
+    This ensures that manually written posts count as coverage, preventing the
+    pipeline from re-analyzing a company that was covered by a hand-written post.
+    """
+    import re
+
+    log = {k: list(v) for k, v in analyzed_log.items()}  # shallow copy
+
+    if not blog_dir.exists():
+        return log
+
+    ticker_re = re.compile(r"^ticker:\s*[\"']?([A-Z]{1,5})[\"']?\s*$", re.MULTILINE)
+    date_re = re.compile(r"^date:\s*[\"']?(\d{4}-\d{2}-\d{2})[\"']?\s*$", re.MULTILINE)
+    company_re = re.compile(r"^company:\s*[\"']?(.+?)[\"']?\s*$", re.MULTILINE)
+
+    for post_path in blog_dir.glob("*.md"):
+        try:
+            text = post_path.read_text(encoding="utf-8")
+            # Only look inside frontmatter
+            if not text.startswith("---"):
+                continue
+            end = text.find("---", 3)
+            if end == -1:
+                continue
+            frontmatter = text[3:end]
+
+            ticker_match = ticker_re.search(frontmatter)
+            date_match = date_re.search(frontmatter)
+            if not ticker_match or not date_match:
+                continue
+
+            ticker = ticker_match.group(1).upper()
+            post_date = date_match.group(1)
+            company_match = company_re.search(frontmatter)
+            company = company_match.group(1).strip() if company_match else ticker
+
+            # Check if this date is already in the log for this ticker
+            existing_dates = {e.get("date") for e in log.get(ticker, [])}
+            if post_date not in existing_dates:
+                if ticker not in log:
+                    log[ticker] = []
+                log[ticker].append({"date": post_date, "company": company})
+                logger.debug("Blog coverage: %s on %s from %s", ticker, post_date, post_path.name)
+
+        except OSError:
+            continue
+
+    return log
 
 
 def _load_universe(data_path: Path) -> list[dict]:
